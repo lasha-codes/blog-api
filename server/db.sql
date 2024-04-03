@@ -1,9 +1,0 @@
-CREATE TABLE blogs (
-  id SERIAL PRIMARY KEY NOT NULL,
-  title VARCHAR(200) NOT NULL,
-  publish_date DATE NOT NULL,
-  description TEXT NOT NULL,
-  image TEXT NOT NULL,
-  email VARCHAR(200) NOT NULL,
-  author VARCHAR(200) NOT NULL
-);
