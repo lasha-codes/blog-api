@@ -23,6 +23,7 @@ const createBlogs = async (req, res) => {
       image,
       email,
       author,
+      types,
     })
     res.status(200).json({
       message: 'U have successfully created a blog',
@@ -32,6 +33,20 @@ const createBlogs = async (req, res) => {
     console.error(err)
   }
 }
+
+const getAllBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find({})
+    res.status(200).json(blogs)
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: 'Sorry something went wrong with the server' })
+  }
+}
+
+app.get('/get-blogs', getAllBlogs)
+app.post('/add-blog', createBlogs)
 
 mongoose.connect(process.env.MONGO_URL).then(() => {
   app.listen(PORT, () => {
