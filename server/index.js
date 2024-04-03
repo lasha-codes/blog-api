@@ -1,6 +1,8 @@
 const express = require('express')
 require('dotenv').config()
 const cors = require('cors')
+const mongoose = require('mongoose')
+const Blog = require('./models/Blog')
 
 const app = express()
 
@@ -9,6 +11,31 @@ const PORT = process.env.PORT || 4000
 app.use(cors())
 app.use(express.json())
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`)
+const createBlogs = async (req, res) => {
+  const { title, description, image, email, author } = req.body
+  try {
+    if (!image) {
+      return
+    }
+    const createdBlog = await Blog.create({
+      title,
+      description,
+      image,
+      email,
+      author,
+    })
+    res.status(200).json({
+      message: 'U have successfully created a blog',
+      ...createdBlog,
+    })
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+mongoose.connect(process.env.MONGO_URL).then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`)
+  })
+  console.log('successfully connected to the database')
 })
