@@ -12,7 +12,7 @@ app.use(cors())
 app.use(express.json())
 
 const createBlogs = async (req, res) => {
-  const { title, description, image, email, author } = req.body
+  const { title, description, image, email, author, date } = req.body
   try {
     if (!image) {
       return
@@ -24,6 +24,7 @@ const createBlogs = async (req, res) => {
       email,
       author,
       types,
+      date,
     })
     res.status(200).json({
       message: 'U have successfully created a blog',
