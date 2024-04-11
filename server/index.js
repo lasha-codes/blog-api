@@ -51,8 +51,29 @@ const authenticate = async (req, res) => {
   const { email } = req.body
   jwt.sign({ email }, process.env.SECRET, {}, (err, token) => {
     if (err) throw err
-    res.cookie('token', token)
+    res.cookie('token', token).json({ message: 'User has been authenticated' })
   })
+}
+
+const getToken = async (req, res) => {
+  const { token } = req.cookies
+  try {
+    jwt.verify(process.env.SECRET, {}, (err, token) => {
+      if (err) throw err
+      const { email } = token
+      if (!email) {
+        res
+          .status(401)
+          .json({ message: 'User is not authenticated', authenticated: false })
+      } else {
+        res
+          .status(200)
+          .json({ message: 'User is authenticated', authenticated: true })
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 app.get('/get-blogs', getAllBlogs)
