@@ -58,7 +58,7 @@ const authenticate = async (req, res) => {
 const getToken = async (req, res) => {
   const { token } = req.cookies
   try {
-    jwt.verify(process.env.SECRET, {}, (err, token) => {
+    jwt.verify(token, process.env.SECRET, {}, (err, token) => {
       if (err) throw err
       const { email } = token
       if (!email) {
@@ -79,6 +79,7 @@ const getToken = async (req, res) => {
 app.get('/get-blogs', getAllBlogs)
 app.post('/add-blog', createBlogs)
 app.post('/authenticate', authenticate)
+app.get('/check-auth', getToken)
 
 mongoose.connect(process.env.MONGO_URL).then(() => {
   app.listen(PORT, () => {
