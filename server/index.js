@@ -3,16 +3,17 @@ require('dotenv').config()
 const cors = require('cors')
 const mongoose = require('mongoose')
 const Blog = require('./models/Blog')
+const jwt = require('jsonwebtoken')
 
 const app = express()
 
 const PORT = process.env.PORT || 4000
 
-app.use(cors())
+app.use(cors({ origin: 'http://127.0.0.1:5500', credentials: true }))
 app.use(express.json())
 
 const createBlogs = async (req, res) => {
-  const { title, description, image, email, author, date } = req.body
+  const { title, description, image, email, author, date, types } = req.body
   try {
     if (!image) {
       return
@@ -46,8 +47,17 @@ const getAllBlogs = async (req, res) => {
   }
 }
 
+const authenticate = async (req, res) => {
+  const { email } = req.body
+  jwt.sign({ email }, process.env.SECRET, {}, (err, token) => {
+    if (err) throw err
+    res.cookie('token', token)
+  })
+}
+
 app.get('/get-blogs', getAllBlogs)
 app.post('/add-blog', createBlogs)
+app.post('/authenticate', authenticate)
 
 mongoose.connect(process.env.MONGO_URL).then(() => {
   app.listen(PORT, () => {
