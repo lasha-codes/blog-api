@@ -4,13 +4,15 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const Blog = require('./models/Blog')
 const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
 
 const app = express()
 
 const PORT = process.env.PORT || 4000
 
-app.use(cors({ origin: 'http://127.0.0.1:5500', credentials: true }))
-app.use(express.json())
+app.use(cors({ origin: 'https://kaikaci12.github.io', credentials: true }))
+app.use(express.json({ limit: '10mb' }))
+app.use(cookieParser())
 
 const createBlogs = async (req, res) => {
   const { title, description, image, email, author, date, types } = req.body
